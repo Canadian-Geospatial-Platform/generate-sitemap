@@ -1,0 +1,22 @@
+{
+  "name": "generate-sitemap",
+  "version": "1.0.0",
+  "description": "Generate a sitemap for geo.ca",
+  "main": "index.js",
+  "scripts": {
+    "remote-test": "./scripts/aws-invoke-lambda.sh",
+    "deploy": "./scripts/aws-zip-and-deploy.sh",
+    "logs": "./scripts/aws-print-lambda-logs.sh",
+    "dt": "npm run deploy && npm run remote-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Canadian-Geospatial-Platform/generate-sitemap.git"
+  },
+  "author": "Pascal Vautour",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Canadian-Geospatial-Platform/generate-sitemap/issues"
+  },
+  "homepage": "https://github.com/Canadian-Geospatial-Platform/generate-sitemap#readme"
+}
