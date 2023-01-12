@@ -3,6 +3,7 @@ const { putObjectToS3 } = require('./putObjectToS3.js')
 const { generateSiteMapFile } = require('./generateSiteMapFile.js')
 const { escapeSpecialXMLCharacters } = require('./utils.js')
 
+// Todo: Catch error if routes is not set and return helpful error
 const ROUTES = JSON.parse(process.env.ROUTES)
 
 // Todo: Error handling
