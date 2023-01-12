@@ -7,7 +7,7 @@
     "remote-test": "./scripts/aws-invoke-lambda.sh",
     "deploy": "./scripts/aws-zip-and-deploy.sh",
     "logs": "./scripts/aws-print-lambda-logs.sh",
-    "dt": "npm run deploy && npm run remote-test"
+    "dt": "npm run deploy && sleep 5s && npm run remote-test"
   },
   "repository": {
     "type": "git",
