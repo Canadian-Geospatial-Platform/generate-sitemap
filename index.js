@@ -50,7 +50,7 @@ async function storeSiteMaps(mapIds, prefix) {
 }
 
 async function generateRootSiteMap(siteMaps) {
-    const siteMap = generateSiteMapFile(siteMaps, process.env.BASE_URL + '/')
+    const siteMap = generateSiteMapFile(siteMaps, process.env.BASE_URL + '/', true)
     console.log("Putting root sitemap here:", process.env.OUTPUT_BUCKET, process.env.ROOT_SITEMAP_OUTPUT_BUCKET_PREFIX + 'sitemap.xml')
     const ret = await putObjectToS3(process.env.OUTPUT_BUCKET, process.env.ROOT_SITEMAP_OUTPUT_BUCKET_PREFIX + 'sitemap.xml', siteMap)
     return ret
