@@ -1,5 +1,5 @@
 #!/bin/bash
 
-lambda_name="load-s3-data-to-opensearch"
+lambda_name="generate-sitemap"
 
 aws logs tail "/aws/lambda/$lambda_name" --follow

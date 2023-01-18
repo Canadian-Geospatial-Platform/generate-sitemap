@@ -7,10 +7,10 @@ const { escapeSpecialXMLCharacters } = require('./utils.js')
 const ROUTES = JSON.parse(process.env.ROUTES)
 
 // Todo: Error handling
-// Todo: Investigate the fact that it seems we need to run twice for the root sitemap to be written to s3. Maybe the write request is lost because we are still writing the keys?
 exports.handler = async (event) => {
+    console.log("Start of sitemap generation.")
     const generatedSiteMaps = await generateSiteMaps()
-    await generateRootSiteMap(generatedSiteMaps)
+    let res = await generateRootSiteMap(generatedSiteMaps)
     const response = {
         statusCode: 200,
         body: 'Execution complete. Look at logs to see if any errors where thrown.',
@@ -26,7 +26,7 @@ async function generateSiteMaps() {
         const mapIds = await getObjectIds(startAfter, process.env.MAX_SITEMAP_ITEM_COUNT, process.env.INPUT_BUCKET, process.env.INPUT_BUCKET_PREFIX)
         startAfter = mapIds.startAfter
         if (mapIds.data.length > 0) {
-            let storedSiteMaps = storeSiteMaps(mapIds.data, siteMapCounter)
+            let storedSiteMaps = await storeSiteMaps(mapIds.data, siteMapCounter)
             generatedSiteMaps = generatedSiteMaps.concat(storedSiteMaps)
         }
         siteMapCounter++
@@ -34,20 +34,25 @@ async function generateSiteMaps() {
     return generatedSiteMaps
 }
 
-function storeSiteMaps(mapIds, prefix) {
+//todo: return result and handle error on s3 write
+async function storeSiteMaps(mapIds, prefix) {
     let i = 0
     let generatedSiteMaps = []
+    let writeToS3Requests = []
     ROUTES.forEach(e => {
         const siteMap = generateSiteMapFile(mapIds, escapeSpecialXMLCharacters(process.env.BASE_URL + e))
-        putObjectToS3(process.env.OUTPUT_BUCKET, process.env.OUTPUT_BUCKET_PREFIX + prefix + '-' + i + '-sitemap.xml', siteMap)
+        writeToS3Requests.push(putObjectToS3(process.env.OUTPUT_BUCKET, process.env.OUTPUT_BUCKET_PREFIX + prefix + '-' + i + '-sitemap.xml', siteMap))
         generatedSiteMaps.push(process.env.OUTPUT_BUCKET_PREFIX + prefix + '-' + i + '-sitemap.xml')
         i++
     })
+    await Promise.all(writeToS3Requests)
     return generatedSiteMaps;
 }
 
 async function generateRootSiteMap(siteMaps) {
     const siteMap = generateSiteMapFile(siteMaps, process.env.BASE_URL + '/')
-    console.log(siteMap)
-    putObjectToS3(process.env.OUTPUT_BUCKET, process.env.ROOT_SITEMAP_OUTPUT_BUCKET_PREFIX + 'sitemap.xml', siteMap)
+    console.log("Putting root sitemap here:", process.env.OUTPUT_BUCKET, process.env.ROOT_SITEMAP_OUTPUT_BUCKET_PREFIX + 'sitemap.xml')
+    const ret = await putObjectToS3(process.env.OUTPUT_BUCKET, process.env.ROOT_SITEMAP_OUTPUT_BUCKET_PREFIX + 'sitemap.xml', siteMap)
+    return ret
 }
+

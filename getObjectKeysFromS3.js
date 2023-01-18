@@ -48,7 +48,6 @@ async function getObjectIds(startAfter = undefined, maxObjectIds = 50000, bucket
         }
         if (maxObjectIds) reachedLengthLimit = true
     }
-    console.log(ret)
     return {
         data: ret,
         startAfter: startAfter
