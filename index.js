@@ -1,4 +1,5 @@
 const { getObjectIds } = require('./getObjectKeysFromS3.js')
+const { getLastMod } = require('./getLastModFromS3.js')
 const { putObjectToS3 } = require('./putObjectToS3.js')
 const { generateSiteMapFile } = require('./generateSiteMapFile.js')
 const { escapeSpecialXMLCharacters } = require('./utils.js')
@@ -9,6 +10,7 @@ const ROUTES = JSON.parse(process.env.ROUTES)
 // Todo: Error handling
 exports.handler = async (event) => {
     console.log("Start of sitemap generation.")
+    const lastMod = getLastMod()
     const generatedSiteMaps = await generateSiteMaps()
     let res = await generateRootSiteMap(generatedSiteMaps)
     const response = {
@@ -51,7 +53,6 @@ async function storeSiteMaps(mapIds, prefix) {
 
 async function generateRootSiteMap(siteMaps) {
     const siteMap = generateSiteMapFile(siteMaps, process.env.BASE_URL + '/', true)
-    console.log("Putting root sitemap here:", process.env.OUTPUT_BUCKET, process.env.ROOT_SITEMAP_OUTPUT_BUCKET_PREFIX + 'sitemap.xml')
     const ret = await putObjectToS3(process.env.OUTPUT_BUCKET, process.env.ROOT_SITEMAP_OUTPUT_BUCKET_PREFIX + 'sitemap.xml', siteMap)
     return ret
 }
