@@ -1,8 +1,6 @@
-var AWS = require('aws-sdk');
-AWS.config.update({ region: 'ca-central-1' });
+const { initialiseS3 } = require('./utils.js')
 
-// Create S3 service object
-const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+var s3 = initialiseS3();
 
 // Get the geojson from the output bucket
 async function getObjectKeys(startAfter, maxObjectIds, bucket, prefix) {

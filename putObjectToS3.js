@@ -1,7 +1,6 @@
-const AWS = require('aws-sdk');
-AWS.config.update({ region: 'ca-central-1' });
+const { initialiseS3 } = require('./utils.js')
 
-var s3 = new AWS.S3();
+var s3 = initialiseS3();
 
 // Returns true on successful write and false on failure.
 function putObjectToS3(bucket, key, data) {
