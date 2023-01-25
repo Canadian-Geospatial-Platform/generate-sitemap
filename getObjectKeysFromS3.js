@@ -35,9 +35,10 @@ async function getObjectIds(startAfter = undefined, maxObjectIds = 50000, bucket
                 if(e.Key.split('/').pop()) return true
                 return false
             }).map(e => { 
+                const lmDate = new Date(e.LastModified)
                 let ret =  {
                     key: e.Key.split('/').pop(),
-                    lastModified: e.LastModified
+                    lastModified: lmDate.toISOString()
             }
                 if (!keepFileExtension) ret.ket = ret.key.split('.')[0]
                 return ret
