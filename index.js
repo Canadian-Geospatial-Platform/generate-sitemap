@@ -44,7 +44,7 @@ async function storeSiteMaps(mapIds, prefix) {
     ROUTES.forEach(e => {
         const siteMap = generateSiteMapFile(mapIds, escapeSpecialXMLCharacters(process.env.BASE_URL + e))
         writeToS3Requests.push(putObjectToS3(process.env.OUTPUT_BUCKET, process.env.OUTPUT_BUCKET_PREFIX + prefix + '-' + i + '-sitemap.xml', siteMap))
-        generatedSiteMaps.push(process.env.OUTPUT_BUCKET_PREFIX + prefix + '-' + i + '-sitemap.xml')
+        generatedSiteMaps.push({key: process.env.OUTPUT_BUCKET_PREFIX + prefix + '-' + i + '-sitemap.xml'})
         i++
     })
     await Promise.all(writeToS3Requests)
