@@ -8,7 +8,7 @@ function generateSiteMapFile(mapIds, baseUrl, isParentSitemap) {
 
 function generateAllRouteXML(mapIds, baseUrl, isParentSitemap) {
     let ret = ''
-    mapIds.forEach((e) => ret = ret + generateRouteXML(baseUrl, e, null, isParentSitemap))
+    mapIds.forEach((e) => ret = ret + generateRouteXML(baseUrl, e.key, e.lastModified, isParentSitemap))
     return ret
 }
 

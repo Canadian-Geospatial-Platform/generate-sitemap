@@ -12,6 +12,7 @@ async function getObjectKeys(startAfter, maxObjectIds, bucket, prefix) {
             MaxKeys: maxObjectIds
         };
         const data = await s3.listObjectsV2(params).promise();
+        console.log(data)
         return data.Contents
     }
     catch (e) {
@@ -34,8 +35,11 @@ async function getObjectIds(startAfter = undefined, maxObjectIds = 50000, bucket
                 if(e.Key.split('/').pop()) return true
                 return false
             }).map(e => { 
-                let ret =  e.Key.split('/').pop()
-                if (!keepFileExtension) ret = ret.split('.')[0]
+                let ret =  {
+                    key: e.Key.split('/').pop(),
+                    lastModified: e.LastModified
+            }
+                if (!keepFileExtension) ret.ket = ret.key.split('.')[0]
                 return ret
             }) // Remove folders and file extensions from Key.
             ret = ret.concat(newKeySet)
