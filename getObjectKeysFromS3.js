@@ -12,7 +12,6 @@ async function getObjectKeys(startAfter, maxObjectIds, bucket, prefix) {
             MaxKeys: maxObjectIds
         };
         const data = await s3.listObjectsV2(params).promise();
-        console.log(data)
         return data.Contents
     }
     catch (e) {
@@ -35,10 +34,10 @@ async function getObjectIds(startAfter = undefined, maxObjectIds = 50000, bucket
                 if(e.Key.split('/').pop()) return true
                 return false
             }).map(e => { 
-                const lmDate = new Date(e.LastModified)
+                const lastModDate = new Date(e.LastModified)
                 let ret =  {
                     key: e.Key.split('/').pop(),
-                    lastModified: lmDate.toISOString()
+                    lastModified: lastModDate.toISOString()
             }
                 if (!keepFileExtension) ret.ket = ret.key.split('.')[0]
                 return ret
